@@ -1,4 +1,4 @@
-name: 同步上游并生成 qg-iptv.m3u
+name: 同步并更新到 iptv 仓库
 on:
   push:
   workflow_dispatch:
@@ -11,30 +11,34 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - name: 拉取原仓库内容
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: 拉取你的 iptv 仓库
+        uses: actions/checkout@v4
+        with:
+          repository: cingcouh/iptv
+          path: iptv_repo
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 配置 Git
+      - name: 同步原作者更新
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: 同步上游仓库
-        run: |
+          git config --global user.name "actions"
+          git config --global user.email "actions@github.com"
           git remote add upstream https://github.com/develop202/migu_video.git || true
           git fetch upstream
-          git checkout main
-          git merge upstream/main --allow-unrelated-histories -X theirs
+          git merge upstream/main -X theirs --allow-unrelated-histories || true
 
-      - name: 生成 iptv/qg-iptv.m3u
+      - name: 把 interface.txt 写入 iptv 仓库的 qg-iptv.m3u
         run: |
-          mkdir -p iptv
-          cat interface.txt > iptv/qg-iptv.m3u
+          mkdir -p iptv_repo
+          cat interface.txt > iptv_repo/qg-iptv.m3u
 
-      - name: 提交并推送
+      - name: 提交到 iptv 仓库
         run: |
-          git add iptv/qg-iptv.m3u
-          git commit -m "Auto update qg-iptv.m3u" || exit 0
+          cd iptv_repo
+          git add qg-iptv.m3u
+          git commit -m "自动更新 qg-iptv.m3u" || exit 0
           git push origin main
