@@ -1,4 +1,4 @@
-name: 强制覆盖更新 qg-iptv.m3u
+name: 强制覆盖更新 iptv1.m3u
 on:
   workflow_dispatch:
   schedule:
@@ -17,8 +17,8 @@ jobs:
 
       - name: 下载最新内容并强制覆盖
         run: |
-          rm -f qg-iptv.m3u
-          curl -L https://raw.githubusercontent.com/develop202/migu_video/main/interface.txt > qg-iptv.m3u
+          rm -f iptv1.m3u
+          curl -L https://raw.githubusercontent.com/develop202/migu_video/main/interface.txt > iptv1.m3u
 
       - name: 提交更新
         run: |
