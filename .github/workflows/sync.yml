@@ -1,0 +1,36 @@
+name: 同步上游并自动生成 qg-iptv.m3u
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */3 * * *"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 同步原作者仓库
+        run: |
+          git config --global user.name "auto-sync"
+          git config --global user.email "auto@github.com"
+          git remote add upstream https://github.com/develop202/migu_video.git
+          git fetch upstream
+          git checkout main
+          git merge upstream/main --allow-unrelated-histories -X theirs
+
+      - name: 创建 iptv 目录并生成 qg-iptv.m3u
+        run: |
+          mkdir -p iptv
+          cat interface.txt > iptv/qg-iptv.m3u
+
+      - name: 提交并推送到你的仓库
+        run: |
+          git add iptv/qg-iptv.m3u
+          git commit -m "自动更新 qg-iptv.m3u from interface.txt"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
