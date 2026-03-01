@@ -8,19 +8,19 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout iptv repo
+      - name: 拉取你的iptv仓库
         uses: actions/checkout@v4
         with:
           repository: cingcouh/iptv
           token: ${{ secrets.PAT }}
 
-      - name: Download latest interface.txt
+      - name: 下载大佬的iptv文件interface.txt并生成qg-iptv.m3u
         run: curl -L https://raw.githubusercontent.com/develop202/migu_video/main/interface.txt -o qg-iptv.m3u
 
-      - name: Commit and push
+      - name: 提交更新到Github
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add qg-iptv.m3u
-          git commit -m "Auto update" || exit 0
+          git commit -m "自动更新" || exit 0
           git push
