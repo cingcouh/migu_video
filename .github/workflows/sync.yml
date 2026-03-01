@@ -1,4 +1,4 @@
-name: iptv_sync
+name: 自动同步咪咕视频源到iptv仓库
 on:
   workflow_dispatch:
   schedule:
