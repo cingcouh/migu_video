@@ -24,6 +24,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add --force qg-iptv.m3u
-          git commit -m "强制更新 qg-iptv.m3u" || exit 0
+          git add --force iptv1.m3u
+          git commit -m "强制更新 iptv1.m3u" || exit 0
           git push --force-with-lease origin main
