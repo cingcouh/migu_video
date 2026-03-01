@@ -14,13 +14,15 @@ jobs:
           repository: cingcouh/iptv
           token: ${{ secrets.PAT }}
 
-      - name: 下载大佬的iptv文件interface.txt并生成qg-iptv.m3u
-        run: curl -L https://raw.githubusercontent.com/develop202/migu_video/main/interface.txt -o qg-iptv.m3u
+      - name: 强制删除旧文件并下载最新版本
+        run: |
+          rm -f qg-iptv.m3u
+          curl -L https://raw.githubusercontent.com/develop202/migu_video/main/interface.txt -o qg-iptv.m3u
 
-      - name: 提交更新到Github
+      - name: 提交更新到GitHub
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "github-actions[bot]@users.nore.github.com"
           git add qg-iptv.m3u
-          git commit -m "自动更新" || exit 0
+          git commit -m "自动更新咪咕源" || exit 0
           git push
